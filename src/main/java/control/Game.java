@@ -2,6 +2,7 @@ package control;
 
 import gui_fields.*;
 import gui_main.GUI;
+import model.ChanceCards;
 import model.Dice;
 import model.Player;
 
@@ -10,6 +11,7 @@ import java.util.Arrays;
 
 public class Game {
     GUI gui;
+    ChanceCards cc;
     Player[] players;
     GUI_Field[] fields = new GUI_Field[24];
     Dice d1 = new Dice();
@@ -56,6 +58,7 @@ public class Game {
     public Game(){
         createFields();
         gui = new GUI(fields);
+        cc = new ChanceCards(gui);
         registerPlayers(gui);
     }
 
@@ -87,7 +90,7 @@ public class Game {
                     color = Color.BLACK;
             }
 
-            players[i] = new Player(name, balance, addPlayer(color, name, balance), gui);
+            players[i] = new Player(name, balance, addPlayer(color, name, balance), gui, cc);
             players[i].setPosition(0);
         }
     }
@@ -124,6 +127,11 @@ public class Game {
                 }
                 fields[i] = street;
             }
+            if(fieldCosts[i] > 0 && !fieldBought[i]){
+                fields[i].setSubText("Cost: " + fieldCosts[i]);
+            }else if(fieldCosts[i] > 0 && fieldBought[i]){
+                fields[i].setSubText("Rent: " + fieldCosts[i]);
+            }
             fields[i].setTitle(fieldNames[i]);
             fields[i].setTitle(fieldNames[i]);
             fields[i].setDescription(descriptions[i]);
@@ -144,7 +152,6 @@ public class Game {
         player.changeBalance(Integer.parseInt(street.getRent()) * -1);
 
         fieldBought[fieldPosition] = true;
-
     }
 
     private void takeTurn(Player player){
@@ -179,6 +186,21 @@ public class Game {
                     players[i].changeBalance(rent);
                 }
             }
+        }
+        repaint();
+    }
+
+    private void repaint(){
+        for(int i = 0; i < fields.length; i++){
+            if(fieldCosts[i] > 0 && !fieldBought[i]){
+                fields[i].setSubText("Cost: " + fieldCosts[i]);
+            }else if(fieldCosts[i] > 0 && fieldBought[i]){
+                fields[i].setSubText("Rent: " + fieldCosts[i]);
+            }
+            gui.getFields()[i].removeAllCars();
+        }
+        for(int i = 0; i < players.length; i++){
+            gui.getFields()[players[i].getPosition()].setCar(players[i].getGui_player(), true);
         }
     }
 

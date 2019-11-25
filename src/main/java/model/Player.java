@@ -13,9 +13,11 @@ public class Player {
     private static int playerIndex = 1;
     private int position;
     private GUI gui;
+    private ChanceCards cc;
         private boolean hasJailCard = false;
-    public Player( String name, int balance, GUI_Player gui_player, GUI gui){
+    public Player( String name, int balance, GUI_Player gui_player, GUI gui, ChanceCards cc){
         this.playerNumber = playerIndex++;
+        this.cc = cc;
         this.name = name;
         gui_player.setBalance(balance);
         this.gui_player = gui_player;
@@ -23,23 +25,24 @@ public class Player {
     }
 
     public void movePlayer(int n){
-        gui.getFields()[position].setCar(gui_player, false);
+        //gui.getFields()[position].setCar(gui_player, false);
         setPosition(position + n);
-        gui.getFields()[position].setCar(gui_player, true);
+        //gui.getFields()[position].setCar(gui_player, true);
         if(gui.getFields()[position] instanceof GUI_Jail){
             goToJail();
         }else if(gui.getFields()[position] instanceof GUI_Chance){
-            //chancecard stuff goes here
+            cc.drawCard(this);
         }
 
     }
 
     //set users position to passed value.
-    private void setPlayerPosition(int pos){
-        gui.getFields()[position].setCar(gui_player, false);
+    public void setPlayerPosition(int pos){
+        //gui.getFields()[position].setCar(gui_player, false);
         setPosition(pos);
-        gui.getFields()[position].setCar(gui_player, true);
+        //gui.getFields()[position].setCar(gui_player, true);
     }
+
 
     private void goToJail(){
         setPlayerPosition(6);

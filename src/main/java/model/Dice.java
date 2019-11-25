@@ -15,6 +15,10 @@ public class Dice {
         currentRoll = (int) (Math.random() * sides + 1);
         return currentRoll;
     }
+    public int roll(int forcedRoll){
+        System.out.println("FORCING ROLL" + forcedRoll);
+        return  forcedRoll;
+    }
 
     public int getCurrentRoll(){
         return currentRoll;
